@@ -7,17 +7,15 @@ const app = express();
 
 // Socket.io
 const io = require("socket.io").listen(server);
-// io.origins([process.env.SOCKET_ORIGIN]); // Allows defined client to communicate with server
+io.origins((origin, callback) => {
+  if (origin !== "https://trading-app.ollebergkvist.me") {
+    return callback("origin not allowed", false);
+  }
+  callback(null, true);
+});
 
 // Imitate stocks
 const rate = require("./models/stock");
-
-// io.origins((origin, callback) => {
-//   if (origin !== 'https://foo.example.com') {
-//       return callback('origin not allowed', false);
-//   }
-//   callback(null, true);
-// });
 
 app.use(function (req, res, next) {
   res.header(
