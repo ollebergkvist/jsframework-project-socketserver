@@ -12,6 +12,25 @@ const io = require("socket.io").listen(server);
 // Imitate stocks
 const rate = require("./models/stock");
 
+// io.origins((origin, callback) => {
+//   if (origin !== 'https://foo.example.com') {
+//       return callback('origin not allowed', false);
+//   }
+//   callback(null, true);
+// });
+
+app.use(function (req, res, next) {
+  res.header(
+    "Access-Control-Allow-Origin",
+    "https://trading-app.ollebergkvist.me"
+  ); // update to match the domain you will make the request from
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+
 // Data
 var apple = {
   label: "Apple Inc",
