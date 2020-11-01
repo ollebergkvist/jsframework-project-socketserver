@@ -4,30 +4,28 @@ require("dotenv").config(); // Requires and configs dotenv
 // Express server
 const express = require("express");
 const app = express();
+const server = require("http").createServer(app);
 
-// Socket.io
-const io = require("socket.io").listen(server);
-io.origins((origin, callback) => {
-  if (origin !== "https://trading-app.ollebergkvist.me") {
-    return callback("origin not allowed", false);
-  }
-  callback(null, true);
-});
+// Cors
+const cors = require("cors");
 
-// Imitate stocks
+// Rate calculation
 const rate = require("./models/stock");
 
-app.use(function (req, res, next) {
-  res.header(
-    "Access-Control-Allow-Origin",
-    "https://trading-app.ollebergkvist.me"
-  ); // update to match the domain you will make the request from
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
+// Socket.io
+const io = require("socket.io")(server, {
+  handlePreflightRequest: (req, res) => {
+    const headers = {
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Allow-Origin": req.headers.origin,
+      "Access-Control-Allow-Credentials": true,
+    };
+    res.writeHead(200, headers);
+    res.end();
+  },
 });
+
+app.use(cors());
 
 // Data
 var apple = {
@@ -54,6 +52,14 @@ var walmart = {
 
 var stocks = [apple, walmart];
 
+// Creates socket.io connection
+io.on("connection", (socket) => {
+  console.log("a user connected");
+  socket.on("disconnect", function () {
+    console.log("user disconnected");
+  });
+});
+
 setInterval(() => {
   stocks.map((stock) => {
     if (stock.data.length > 12) {
@@ -67,19 +73,12 @@ setInterval(() => {
 
     return stock;
   });
+
   console.log(stocks);
   io.emit("stocks", stocks);
 }, 5000);
 
-// Creates socket.io connection
-io.on("connection", (socket) => {
-  console.log("a user connected");
-  socket.on("disconnect", function () {
-    console.log("user disconnected");
-  });
-});
-
 // Starts server and sets what port to listen to
-var server = app.listen(process.env.EXPRESS_PORT, () => {
+server.listen(process.env.EXPRESS_PORT, () => {
   console.log("Express server is up and running"); // Prints msg
 });
