@@ -6,9 +6,8 @@ const express = require("express");
 const app = express();
 
 // Socket.io
-const server = require("http").createServer(app);
-const io = require("socket.io")(server);
-io.origins([process.env.SOCKET_ORIGIN]); // Allows defined client to communicate with server
+const io = require("socket.io").listen(server);
+// io.origins([process.env.SOCKET_ORIGIN]); // Allows defined client to communicate with server
 
 // Imitate stocks
 const rate = require("./models/stock");
@@ -64,6 +63,6 @@ io.on("connection", (socket) => {
 });
 
 // Starts server and sets what port to listen to
-server.listen(process.env.EXPRESS_PORT, () => {
-  console.log("Express server is up and running"); // Prints server message
+var server = app.listen(process.env.EXPRESS_PORT, () => {
+  console.log("Express server is up and running"); // Prints msg
 });
