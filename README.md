@@ -1,12 +1,26 @@
 # jsframework-project-socketserver
 
-## npm install
+### Clone repo
 
-Installs dependencies.
+```
+git clone https://github.com/ollebergkvist/jsframework-vue-backend
+```
 
-## npm start
+### Install npm packages
 
-Runs the app.
+```
+npm install
+```
+
+### Start server
+
+```
+npm start
+```
+
+### Github repo
+
+[Jsframework-vue-backend](https://github.com/ollebergkvist/jsframework-project-socketserver)
 
 ## Krav 3: Realtid
 
