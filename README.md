@@ -3,7 +3,7 @@
 ### Clone repo
 
 ```
-git clone https://github.com/ollebergkvist/jsframework-vue-backend
+git clone https://github.com/ollebergkvist/jsframework-project-socketserver
 ```
 
 ### Install npm packages
